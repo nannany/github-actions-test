@@ -20,4 +20,3 @@ jobs:
       run: |
         aws cloudfront list-distributions
 
-
