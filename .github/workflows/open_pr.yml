@@ -16,7 +16,7 @@ jobs:
       with:
         role-to-assume: arn:aws:iam::${{ secrets.ACCOUNT_ID }}:role/github-cloudfront-test
         aws-region: ap-northeast-1
-    - name: Copy files to the test website with the AWS CLI
+    - name: Access CloudFront
       run: |
         aws cloudfront list-distributions
 

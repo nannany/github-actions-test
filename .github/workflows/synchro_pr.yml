@@ -5,13 +5,18 @@ on:
     types: [ synchronize ]
 
 jobs:
-  say_hello:
+  access_cloudfront:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     steps:
-      - run: |
-          echo '1' $GITHUB_REF
-          echo '2' ${{ github.ref }}
-          echo '3' ${{ github.ref_name }}
-          echo '4' ${{ github.head_ref }}
-          echo '5' ${{ github.base_ref }}
+      - name: Configure AWS credentials from my account
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.ACCOUNT_ID }}:role/github-cloudfront-test
+          aws-region: ap-northeast-1
+      - name: Copy files to the test website with the AWS CLI
+        run: |
+          aws cloudfront list-distributions
 
