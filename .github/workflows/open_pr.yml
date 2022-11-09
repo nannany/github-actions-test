@@ -1,0 +1,17 @@
+name: Open Pull Request
+
+on:
+  pull_request:
+    types: [ opened,reopened ]
+
+jobs:
+  say_hello:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo '1' $GITHUB_REF
+          echo '2' ${{ github.ref }}
+          echo '3' ${{ github.ref_name }}
+          echo '4' ${{ github.head_ref }}
+          echo '5' ${{ github.base_ref }}
+
