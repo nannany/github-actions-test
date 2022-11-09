@@ -2,7 +2,7 @@ name: Close Pull Request
 
 on:
   pull_request:
-    types: [ close ]
+    types: [ closed ]
 
 jobs:
   say_hello:
