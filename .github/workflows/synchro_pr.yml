@@ -19,7 +19,6 @@ jobs:
       - name: get cloudfront arn
         run: |
           arn=$(aws resourcegroupstaggingapi get-resources --tag-filters Key=for_nannany,Values=vacant --max-items 1 --region us-east-1  | jq -r ".ResourceTagMappingList[].ResourceARN")
-          id=$(echo $arn | sed 's:.*/::)
+          id=$(eval echo ${arn} | sed 's:.*/::')
           aws cloudfront get-distribution-config --id $id | jq -r '.DistributionConfig.Origins.Items[].DomainName | select(. | test(".*s3\\.ap-northeast-1\\.amazonaws\\.com"))'
           aws cloudfront tag-resource --resource $arn --tags 'Items=[{Key=for_nannany,Value=${{ github.head_ref }}}]'
-
