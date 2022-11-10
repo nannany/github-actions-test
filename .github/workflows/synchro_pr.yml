@@ -22,3 +22,4 @@ jobs:
           id=$(echo $arn | sed 's:.*/::)
           aws cloudfront get-distribution-config --id $id | jq -r '.DistributionConfig.Origins.Items[].DomainName | select(. | test(".*s3\\.ap-northeast-1\\.amazonaws\\.com"))'
           aws cloudfront tag-resource --resource $arn --tags 'Items=[{Key=for_nannany,Value=${{ github.head_ref }}}]'
+
