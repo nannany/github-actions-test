@@ -24,7 +24,7 @@ jobs:
         id: describe
         run: |
           id=$(echo ${{ steps.arn.outputs.ARN }} | sed 's:.*/::')
-          aws cloudfront get-distribution-config --id $id | jq -r '.DistributionConfig.Origins.Items[].DomainName | select(. | test(".*s3\\.ap-northeast-1\\.amazonaws\\.com"))'
+          aws cloudfront get-distribution-config --id ${id} | jq -r '.DistributionConfig.Origins.Items[].DomainName | select(. | test(".*s3\\.ap-northeast-1\\.amazonaws\\.com"))'
       - name: Update CloudFront tag
         id: update
         run: |
