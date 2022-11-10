@@ -5,13 +5,23 @@ on:
     types: [ closed ]
 
 jobs:
-  say_hello:
+  access_cloudfront:
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
     steps:
-      - run: |
-          echo '1' $GITHUB_REF
-          echo '2' ${{ github.ref }}
-          echo '3' ${{ github.ref_name }}
-          echo '4' ${{ github.head_ref }}
-          echo '5' ${{ github.base_ref }}
+      - name: Configure AWS credentials from my account
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          role-to-assume: arn:aws:iam::${{ secrets.ACCOUNT_ID }}:role/github-cloudfront-test
+          aws-region: ap-northeast-1
+      - name: Get CloudFront ARN
+        id: arn
+        run: |
+          echo "ARN=$(aws resourcegroupstaggingapi get-resources --tag-filters Key=for_nannany,Values=${{ github.head_ref }} --max-items 1 --region us-east-1  | jq -r ".ResourceTagMappingList[].ResourceARN")" >>$GITHUB_OUTPUT
+      - name: Reset CloudFront tag
+        id: update
+        run: |
+          aws cloudfront tag-resource --resource ${{ steps.arn.outputs.ARN }} --tags 'Items=[{Key=for_nannany,Value=vacant}]'
 
