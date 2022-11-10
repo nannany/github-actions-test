@@ -24,3 +24,4 @@ jobs:
         id: describe
         run: |
           aws cloudfront get-distribution-config --id ${{ steps.arn.outputs.ID }} | jq -r '.DistributionConfig.Origins.Items[].DomainName | select(. | test(".*s3\\.ap-northeast-1\\.amazonaws\\.com"))'
+          aws cloudfront get-distribution --id ${{ steps.arn.outputs.ID }} | jq -r '.Distribution.DomainName'
