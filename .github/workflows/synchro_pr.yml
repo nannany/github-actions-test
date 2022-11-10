@@ -16,9 +16,15 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::${{ secrets.ACCOUNT_ID }}:role/github-cloudfront-test
           aws-region: ap-northeast-1
-      - name: get cloudfront arn
+      - id: arn
+        name: Get CloudFront ARN
         run: |
-          arn=$(aws resourcegroupstaggingapi get-resources --tag-filters Key=for_nannany,Values=vacant --max-items 1 --region us-east-1  | jq -r ".ResourceTagMappingList[].ResourceARN")
-          id=$(eval echo ${arn} | sed 's:.*/::')
+          echo "ARN=$(aws resourcegroupstaggingapi get-resources --tag-filters Key=for_nannany,Values=vacant --max-items 1 --region us-east-1  | jq -r ".ResourceTagMappingList[].ResourceARN")" >>$GITHUB_OUTPUT
+      - id: describe
+        name: Describe CloudFront
+        run: |
+          id=$(echo ${{ steps.arn.outputs.ARN }} | sed 's:.*/::')
           aws cloudfront get-distribution-config --id $id | jq -r '.DistributionConfig.Origins.Items[].DomainName | select(. | test(".*s3\\.ap-northeast-1\\.amazonaws\\.com"))'
-          aws cloudfront tag-resource --resource $arn --tags 'Items=[{Key=for_nannany,Value=${{ github.head_ref }}}]'
+      - id: update
+        name: Update CloudFront tag
+          aws cloudfront tag-resource --resource ${{ steps.arn.outputs.ARN }} --tags 'Items=[{Key=for_nannany,Value=${{ github.head_ref }}}]'
