@@ -3,6 +3,10 @@ name: Open Pull Request
 on:
   pull_request:
     types: [ opened,reopened ]
+    branches-ignore:
+      - 'main'
+      - 'release/*'
+      - 'hotfix/*'
 
 jobs:
   access_cloudfront:
@@ -29,3 +33,4 @@ jobs:
         id: update
         run: |
           aws cloudfront tag-resource --resource ${{ steps.arn.outputs.ARN }} --tags 'Items=[{Key=for_nannany,Value=${{ github.head_ref }}}]'
+
