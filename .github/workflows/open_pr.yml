@@ -33,3 +33,6 @@ jobs:
         id: update
         run: |
           aws cloudfront tag-resource --resource ${{ steps.arn.outputs.ARN }} --tags 'Items=[{Key=for_nannany,Value=${{ github.head_ref }}}]'
+
+
+
