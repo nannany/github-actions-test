@@ -3,8 +3,11 @@ name: Hello World
 on:
   workflow_dispatch:
 
+env:
+  GITHUB_OUTPUT: "aaaaa"
+
 jobs:
   say_hello:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "Hello World!"
+      - run: echo "${{ env.GITHUB_OUTPUT }}"
