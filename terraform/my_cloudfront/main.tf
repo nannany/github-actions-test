@@ -5,3 +5,4 @@ variable "input_hello" {
 output "output_hello" {
   value = var.input_hello
 }
+
